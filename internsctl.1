@@ -1,0 +1,93 @@
+.Dd 25/10/20               \" DATE
+.Dt internsctl      \" Program name and manual section number
+
+.Sh NAME                 \" Section Header - required - don't modify
+.\" The following lines are read in generating the apropos(man -k) database. Use only key
+.\" words here as the database is built based on the words here and in the .ND line.
+.Nm internsctl
+.\" Use .Nm macro to designate other names for the documented program.
+.Nd This is a custom Linux command to get information about files/users and to create new user using bash scripting.
+.Sh SYNOPSIS             \" Section Header - required - don't modify
+internsctl  --verion
+
+internsctl --help
+
+internsctl cpu getinfo
+
+internsctl memory getinfo
+
+internsctl user create [USERNAME]
+
+internsctl user list
+
+internsctl user list --sudo-only
+
+internsctl file getinfo [FILE-NAME]
+
+internsctl file getinfo [options] [FILE-NAME]
+
+
+.Sh DESCRIPTION          \" Section Header 
+.B internsctl 
+It is a shell program for adding users to LDAP server. internsctl is used to know about the file information and to list the present users or sudo users.
+
+.Bl -tag -width -indent  \" Begins a tagged list
+.Nm user create
+ It creates a new user or to get information about new user
+ 
+.Nm file getinfo               
+ It gives the information of the required file gives the  information of the required file
+
+.Nm cpu               
+ It gives the information of system CPU
+
+.Nm memory               
+ It gives the information about current memory statistics
+.El                      \" Ends the list
+.Pp
+.Nm A list of flags and their descriptions:
+.Bl -tag -width -indent  \" Differs from above in tag removed
+.It Fl s              \"-a flag as a list item
+ size 
+.It Fl p
+ Permisions 
+.It Fl o 
+ Owner 
+.It Fl m
+last modified 
+.El                      \" Ends the list
+.Pp
+.Sh ENVIRONMENT      \" May not be needed
+Tested in Kali Linux
+
+.Sh OPTIONS                \" File used or created by the topic of the man page
+--size, -s It is used to print size of a file
+
+
+--permissions, -p It prints file permissions
+
+
+--owner, o It prints file owner
+
+
+--last-modified, m It checks for the last modified date and time
+
+
+--version, -v to check the version of the command
+
+
+--help, to get help about the command
+
+
+.El     
+
+.\" List links in ascending order by section, alphabetically within a section.
+.\" Please do not reference files that do not exist without filing a bug report
+
+.Sh BUGS              \" Document known, unremedied bugs
+No known bugs.
+
+.Sh AUTHOR
+Written By Noor Raza (noor.raza1998@gmail.com)
+
+XenonStack L1 Intern
