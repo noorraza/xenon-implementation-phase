@@ -1,0 +1,135 @@
+#echo $1
+#echo $2
+#echo $3
+
+
+if [ $1 == "--version" ]
+then 
+echo "v0.1.0" 
+
+elif [ $1 == "--help" ]
+then
+echo "
+NAME
+     internsctl — This is a custom Linux command to get information about
+     files/users and to create new user using bash scripting.
+
+SYNOPSIS
+     internsctl  --verion
+
+     internsctl --help
+
+     internsctl cpu getinfo
+
+     internsctl memory getinfo
+
+     internsctl user create [USERNAME]
+
+     internsctl user list
+
+     internsctl user list --sudo-only
+
+     internsctl file getinfo [FILE-NAME]
+
+     internsctl file getinfo [options] [FILE-NAME]
+
+DESCRIPTION
+It is a shell program for adding users to LDAP server. internsctl is used to know about the file information and to list the present users or sudo users.
+
+     user create
+      It creates a new user or to get information about new user
+
+     file getinfo
+      It gives the information of the required file gives the information of the required file
+
+     cpu
+      It gives the information of system CPU
+
+     memory
+      It gives the information about current memory statistics
+
+A list of flags and their descriptions:
+
+-s        size
+
+-p        Permisions
+
+-o        Owner
+
+-m       last modified
+
+ENVIRONMENT
+     Tested in Kali Linux
+
+OPTIONS
+     --size, -s It is used to print size of a file
+
+     --permissions, -p It prints file permissions
+
+     --owner, o It prints file owner
+
+     --last-modified, m It checks for the last modified date and time
+
+     --version, -v to check the version of the command
+
+     --help, to get help about the command
+
+BUGS
+     No known bugs.
+
+AUTHOR
+     Written By Noor Raza (noor.raza1998@gmail.com)
+
+     XenonStack L1 Intern
+
+"
+
+elif [[ $1 == "cpu" && $2 == "getinfo" ]]
+then
+lscpu
+
+elif [[ $1 == "memory" && $2 == "getinfo" ]]
+then
+free
+
+elif [[ $1 == "user" && $2 == "create" ]]
+then
+adduser $3
+
+#$# returns numbers of arguments
+elif [[ $1 == "user" && $2 == "list" && $# == 2 ]]
+then
+cat /etc/passwd
+
+elif [[ $1 == "user" && $2 == "list" && $3 == "--sudo-only" ]]
+then
+getent group sudo
+
+
+elif [[ $1 == "file" && $2 == "getinfo" && $# == 3 ]]
+then
+echo "FIle:" $(ls -l $3 | cut -d " " -f 9)
+echo "Access:" $(ls -l $3 | cut -d " " -f 1)
+echo "Size(B):" $(ls -l $3 | cut -d " " -f 5)
+echo "Owner:"  $(ls -l $3 | cut -d " " -f 3 )
+echo "Modify:"  $(stat -c %y $3)
+
+
+elif [[ $1 == "file" && $2 == "getinfo" && $3 == "-s" ]]
+then
+ls -l $4 | cut -d " " -f 5
+
+elif [[ $1 == "file" && $2 == "getinfo" && $3 == "-p" ]]
+then
+ls -l $4 | cut -d " " -f 1
+
+elif [[ $1 == "file" && $2 == "getinfo" && $3 == "o" ]]
+then
+ls -l $4 | cut -d " " -f 3
+
+elif [[ $1 == "file" && $2 == "getinfo" && $3 == "m" ]]
+then
+stat -c %y $4
+
+fi
+
