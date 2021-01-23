@@ -1,0 +1,133 @@
+#include<bits/stdc++.h>
+using namespace std;
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int K=5) {
+        partial_sort(points.begin(), points.begin() + K, points.end(), [](vector<int>& p, vector<int>& q) {
+            return p[0] * p[0] + p[1] * p[1] < q[0] * q[0] + q[1] * q[1];
+        });
+        return vector<vector<int>>(points.begin(), points.begin() + K);
+    }
+
+
+int filter_out(vector<vector<int>> &b,vector<vector<int>> &c5)
+{
+    //removing all those cities who are closest_5 from search space coz they don't have any taxes
+    for(int i=0;i<b.size();i++)
+    {
+        for(int j=0;j<c5.size();j++)
+        {
+            if(b[i][0]==c5[j][0] && b[i][1]==c5[j][1])
+            {
+                b.erase(b.begin()+i);
+            }
+        }
+    }
+
+    //cost calculation for branches that are left after removing out 5 closest branches
+    //and filtering out the minimum cost item
+    int min_cost=INT_MAX;
+    int index;
+    for(int i=0;i<b.size();i++)
+    {
+        int cost=((b[i][0]+b[i][1])*10);
+        if(min_cost>cost)
+        {
+            min_cost=cost;
+            index=i;
+        }
+    }
+    b.erase(b.begin()+index);
+    return min_cost;
+
+
+}
+
+int main()
+{
+	//filter_out takes out one of items from set of products based on least weight/value figure.
+	//closest_5 branches returns boolean value true or false which denotes whther the particular product is from closest branch or not.
+	//Cost array denotes the price of products at each branch
+	//Order price is price without delivery price and New price is price after the delivery charges
+	//For the sake of simplicity the price of product from any branch would be 10*(x_cordinate+y_cordinate)
+	//n is number of products the customer want to buy
+	//These are the co-ordinates of branches of Golden Groceries
+	vector<vector<int>> branches{
+	 {1,2},{2,4},{1,1},{1,2},{3,4},{2,5},{2,2},{3,3},{5,6},{10,15},{2,8},{3,7},{3,5}
+	};
+
+	//Cost denotes the prices of products at each branch.
+	vector<int> cost(branches.size(),0);
+	for(int i=0;i<cost.size();i++)
+	{
+		cost[i]+=(branches[i][0]+branches[i][1])*10;
+	}
+
+
+	int n;
+	cout<<"Enter the number of products u wanna buy"<<endl;
+	cin>>n;
+
+	//products_from denotes the index i.e branch from which user wants to buy the product.
+	vector<int> products_from(n,0);
+	cout<<"Note:Branch number are numbered from 0 to number of Branch-1"<<endl;
+	cout<<"\n"<<"Please Enter the Branch index";
+	for(int i=0;i<products_from.size();i++)
+	{
+		cin>>products_from[i];
+	}
+
+	//Calculating the order price
+	int order_price=0;
+	for(int i=0;i<products_from.size();i++)
+	{
+		order_price+=cost[products_from[i]];
+	}
+
+	int original_price=0;
+	vector<vector<int>> closest_5;
+	for(int i=0;i<products_from.size();i++)
+	{
+		//checking if the product we wanna buy is from closest 5 branches or not
+		int x=branches[products_from[i]][0];
+		int y=branches[products_from[i]][1];
+		closest_5=kClosest(branches);
+		int flag=0;
+		for(int j=0;j<5;i++)
+		{
+			if(x==closest_5[i][0] && y==closest_5[i][1])
+			{
+				flag=1;
+				original_price+=cost[products_from[i]];
+				break;
+			}
+		}
+		if(flag==0)
+		{
+			original_price+=cost[products_from[i]];
+			original_price+=cost[products_from[i]]/10;
+		}
+
+	}
+
+	//Give 3% discount if the original price is greater than order price
+	if(original_price>order_price)
+	{
+		original_price-=(original_price*3)/100;
+	}
+
+	//if the original price is still greater than the order price than start removing products until it becomes lesser or equl.
+	if(original_price>order_price)
+	{
+		while(original_price<=order_price)
+		{
+			//remove 1 item based on weight/value
+			int filtered_item_cost=filter_out(branches,closest_5);
+			original_price-=filtered_item_cost;
+			if(original_price<=order_price)
+			{
+				break;
+			}
+		}
+	}
+
+	cout<<"The price of order after all the discount and delivery charges included is:"<<original_price<<endl;
+}
